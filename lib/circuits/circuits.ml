@@ -14,3 +14,4 @@ let run () =
      print_int (width x);
      print_newline () *)
   vhdl_of_adder_circuit ()
+

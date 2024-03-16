@@ -1,4 +1,4 @@
 (executable
  (public_name hardcaml_intro)
  (name main)
- (libraries circuits))
+ (libraries circuits counter))

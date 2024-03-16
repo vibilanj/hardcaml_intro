@@ -1,0 +1,3 @@
+(library
+ (name circuits)
+ (libraries hardcaml))

@@ -1,5 +1,5 @@
 (library
- (name combinational)
+ (name circuits)
  (libraries hardcaml)
  (inline_tests)
  (preprocess (pps ppx_expect)))

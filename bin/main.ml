@@ -1,3 +1,1 @@
-open Combinational
-
-let () = run ()
+let () = Circuits.run ()

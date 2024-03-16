@@ -1,2 +1,5 @@
 (library
- (name hardcaml_intro))
+ (name combinational)
+ (libraries hardcaml)
+ (inline_tests)
+ (preprocess (pps ppx_expect)))

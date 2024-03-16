@@ -1,4 +1,3 @@
-(* open Base *)
-open Hardcaml.Bits
+open Combinational
 
-let () = pp Stdlib.Format.std_formatter (of_string "11001")
+let () = run ()

@@ -1,2 +1,5 @@
-(test
- (name hardcaml_intro))
+(library
+ (name test_hardcaml_intro)
+ (libraries hardcaml)
+ (inline_tests (flags (-verbose)))
+ (preprocess (pps ppx_expect)))

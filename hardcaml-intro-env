@@ -7,6 +7,7 @@ roots: [
   "ocaml.5.1.1"
   "ocaml-lsp-server.1.17.0"
   "ocamlformat.0.26.1"
+  "ppx_deriving.5.2.1"
   "ppx_hardcaml.v0.17~preview.129.11+135"
   "utop.2.14.0"
 ]
@@ -100,6 +101,7 @@ installed: [
   "ppx_compare.v0.17~preview.129.11+135"
   "ppx_custom_printf.v0.17~preview.129.11+135"
   "ppx_derivers.1.2.1"
+  "ppx_deriving.5.2.1"
   "ppx_disable_unused_warnings.v0.17~preview.129.11+135"
   "ppx_enumerate.v0.17~preview.129.11+135"
   "ppx_expect.v0.17~preview.129.11+135"

@@ -53,6 +53,8 @@ let create (i : _ I.t) =
                   [ sm.set_next S_write_result ]
                   [
                     remaining <-- remaining.value -:. 1;
+                    (* Assignments are synchronous so the assignment of f1
+                       will use the old f0 value *)
                     f0 <-- f1.value;
                     f1 <-- f0.value +: f1.value;
                   ];
@@ -109,9 +111,31 @@ let fibonacci_testbench (sim : (_ I.t, _ O.t) Cyclesim.t) =
 
   Cyclesim.cycle sim
 
-let waves = 
-  let module Sim = Cyclesim.With_interface(I)(O) in 
-  let sim = Sim.create create in 
-  let waves, sim = Waveform.create sim in 
+let waves () =
+  let open Hardcaml_waveterm.Display_rule in
+  let input_rules =
+    I.(
+      map port_names ~f:(port_name_is ~wave_format:(Bit_or Unsigned_int))
+      |> to_list)
+  in
+  let output_rules =
+    O.(map port_names ~f:(port_name_is ~wave_format:(Bit_or Unsigned_int)))
+  in
+  let output_rules =
+    {
+      output_rules with
+      O.state =
+        port_name_is "state"
+          ~wave_format:
+            (Index
+               (List.map States.all ~f:(fun t ->
+                    States.sexp_of_t t |> Sexp.to_string)));
+    }
+    |> O.to_list
+  in
+  let module Sim = Cyclesim.With_interface (I) (O) in
+  let sim = Sim.create create in
+  let waves, sim = Waveform.create sim in
   fibonacci_testbench sim;
-  waves
+  Waveform.print waves ~display_width:94
+    ~display_rules:(input_rules @ output_rules)

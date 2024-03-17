@@ -1,0 +1,4 @@
+(library
+ (name fibonacci)
+ (libraries hardcaml hardcaml_waveterm)
+ (preprocess (pps ppx_compare ppx_enumerate ppx_sexp_message ppx_hardcaml)))

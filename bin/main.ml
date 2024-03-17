@@ -9,5 +9,5 @@
 (* let () = Adder.vhdl_of_ripple_carry_adder () *)
 (* let () = Adder.vhdl_of_ripple_carry_adder () *)
 
-let () = Fibonacci.waves ()
-(* let () = Traffic.print_simulation () *)
+(* let () = Fibonacci.waves () *)
+let () = Traffic.print_simulation ()

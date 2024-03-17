@@ -27,6 +27,7 @@ let create (i : _ I.t) =
   let sm = Always.State_machine.create (module States) ~enable:vdd r_sync in
   let main_result = Always.Variable.wire ~default:(of_string "010") in
   let side_result = Always.Variable.wire ~default:(of_string "100") in
+  let wait_period = Always.Variable.reg ~width:2 ~enable:vdd r_sync in
   Always.(
     compile
       [
@@ -36,7 +37,9 @@ let create (i : _ I.t) =
               [
                 main_result <-- Signal.of_string "010";
                 side_result <-- Signal.of_string "100";
-                sm.set_next YellowMainRedSide;
+                when_ (i.button ==: vdd)
+                  [ wait_period <--. 2; sm.set_next YellowMainRedSide ]
+                (* when_ is like if_ without an else case *);
               ] );
             ( YellowMainRedSide,
               [
@@ -48,7 +51,9 @@ let create (i : _ I.t) =
               [
                 main_result <-- Signal.of_string "100";
                 side_result <-- Signal.of_string "010";
-                sm.set_next RedMainYellowSide;
+                if_ (wait_period.value ==:. 0)
+                   [ sm.set_next RedMainYellowSide ]
+                   [ wait_period <-- wait_period.value -:. 1 ];
               ] );
             ( RedMainYellowSide,
               [
@@ -69,10 +74,9 @@ let traffic_testbench (sim : (_ I.t, _ O.t) Cyclesim.t) =
     Stdio.print_s [%message (state : States.t) (main : string) (side : string)]
   in
 
+  (* Cycle 0 *)
   Cyclesim.reset sim;
   inputs.clear := Bits.vdd;
-
-  (* Cycle 0 *)
   Cyclesim.cycle sim;
   print_state_and_outputs ();
 
@@ -86,10 +90,12 @@ let traffic_testbench (sim : (_ I.t, _ O.t) Cyclesim.t) =
   print_state_and_outputs ();
 
   (* Cycle 3 *)
+  inputs.button := Bits.vdd;
   Cyclesim.cycle sim;
   print_state_and_outputs ();
 
   (* Cycle 4 *)
+  inputs.button := Bits.gnd;
   Cyclesim.cycle sim;
   print_state_and_outputs ();
 
@@ -98,7 +104,6 @@ let traffic_testbench (sim : (_ I.t, _ O.t) Cyclesim.t) =
   print_state_and_outputs ();
 
   (* Cycle 6 *)
-  inputs.clear := Bits.vdd;
   Cyclesim.cycle sim;
   print_state_and_outputs ();
 
@@ -107,7 +112,10 @@ let traffic_testbench (sim : (_ I.t, _ O.t) Cyclesim.t) =
   print_state_and_outputs ();
 
   (* Cycle 8 *)
-  inputs.clear := Bits.gnd;
+  Cyclesim.cycle sim;
+  print_state_and_outputs ();
+
+  (* Cycle 9 *)
   Cyclesim.cycle sim;
   print_state_and_outputs ()
 

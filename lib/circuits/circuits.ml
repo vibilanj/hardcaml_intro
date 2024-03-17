@@ -1,6 +1,3 @@
-(* open Hardcaml.Bits *)
-(* open Hardcaml.Signal *)
-
 let vhdl_of_adder_circuit () =
   let open Hardcaml.Signal in
   let adder a b = a +: b in
@@ -9,9 +6,5 @@ let vhdl_of_adder_circuit () =
     Hardcaml.Rtl.print Vhdl circuit
 
 let run () =
-  (* let x = of_string "11001" in
-     Format.printf "%a@." pp x;
-     print_int (width x);
-     print_newline () *)
   vhdl_of_adder_circuit ()
 

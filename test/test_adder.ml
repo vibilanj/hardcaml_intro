@@ -1,6 +1,7 @@
 let testbench x_val y_val c_val =
   let open Hardcaml in
   let simulator = Cyclesim.create Adder.full_adder_circuit in
+  (* let inputs, outputs = Cyclesim.inputs simulator, Cyclesim.outputs simulator in  *)
   let sum = Cyclesim.out_port simulator "sum" in
   let carry = Cyclesim.out_port simulator "carry" in
   Cyclesim.reset simulator;

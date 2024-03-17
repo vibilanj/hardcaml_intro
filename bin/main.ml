@@ -7,4 +7,6 @@
 
 (* let () = Adder.vhdl_of_full_adder () *)
 (* let () = Adder.vhdl_of_ripple_carry_adder () *)
-let () = Adder.vhdl_of_ripple_carry_adder ()
+(* let () = Adder.vhdl_of_ripple_carry_adder () *)
+
+(* let () = let _ = Traffic.waves in () *)

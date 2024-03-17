@@ -1,4 +1,4 @@
-(* let () = Circuits.run () *)
+(* let () = Sandbox.run () *)
 
 (* let () = Counter.testbench Counter.create *)
 (* let () = Counter.testbench Counter.counter_with_always *)

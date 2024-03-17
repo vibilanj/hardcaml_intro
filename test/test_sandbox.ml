@@ -1,5 +1,5 @@
 let%expect_test "should produce correct vhdl" =
-  Circuits.vhdl_of_adder_circuit ();
+  Sandbox.vhdl_of_adder_circuit ();
   [%expect {|
     library ieee;
     use ieee.std_logic_1164.all;

@@ -27,8 +27,23 @@ let counter_with_wire (i : _ I.t) =
   w <== dout;
   { O.dout }
 
+let counter_with_always (i : _ I.t) =
+  let dout =
+    Always.Variable.reg (Reg_spec.create ~clock:i.clock ()) ~enable:vdd ~width:8
+  in
+  Always.(
+    compile
+      [
+        if_ i.clear
+          [ dout <--. 0 ]
+          [ when_ i.incr [ dout <-- dout.value +:. 1 ] ];
+      ]);
+  { O.dout = dout.value }
+
 let print_vhdl () =
-  let circuit = Circuit.create_with_interface (module I) (module O) create ~name:"counter" in 
+  let circuit =
+    Circuit.create_with_interface (module I) (module O) create ~name:"counter"
+  in
   Rtl.print Vhdl circuit
 
 module Simulator = Cyclesim.With_interface (I) (O)
@@ -49,5 +64,4 @@ let testbench (create_design_fn : t I.t -> t O.t) =
   step ~clear:0 ~incr:1;
   step ~clear:0 ~incr:0;
   step ~clear:1 ~incr:0;
-  step ~clear:0 ~incr:0;
   step ~clear:0 ~incr:0

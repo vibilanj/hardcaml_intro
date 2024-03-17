@@ -11,7 +11,7 @@ let testbench x_val y_val c_val =
   Format.printf "Sum: %a, Carry: %a@." Hardcaml.Bits.pp !sum Hardcaml.Bits.pp
     !carry
 
-let%expect_test "should compute sum and carry properly for half_adder" =
+let%expect_test "should compute sum and carry properly for full_adder" =
   let open Hardcaml.Bits in
   testbench gnd gnd gnd;
   [%expect {| Sum: 0, Carry: 0 |}];
@@ -24,7 +24,7 @@ let%expect_test "should compute sum and carry properly for half_adder" =
   testbench vdd vdd vdd;
   [%expect {| Sum: 1, Carry: 1 |}]
 
-let%expect_test "should produce correct vhdl" =
+let%expect_test "should produce correct vhdl for full_adder" =
   Adder.vhdl_of_full_adder ();
   [%expect
     {|
@@ -78,3 +78,16 @@ let%expect_test "should produce correct vhdl" =
 
     end architecture;
     |}]
+
+let%expect_test "should compute sum properly for ripple_carry_adder" =
+  let open Hardcaml in
+  let open Hardcaml.Bits in
+  let simulator = Cyclesim.create Adder.ripple_carry_adder_circuit in
+  let sum = Cyclesim.out_port simulator "sum" in
+  Cyclesim.reset simulator;
+  Cyclesim.in_port simulator "x" := of_int ~width:8 42;
+  Cyclesim.in_port simulator "y" := of_int ~width:8 37;
+  Cyclesim.in_port simulator "c" := of_int ~width:1 0;
+  Cyclesim.cycle simulator;
+  print_int (to_int !sum);
+  [%expect {| 79 |}]
